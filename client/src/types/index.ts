@@ -1,1 +1,9 @@
-export type { ApiResponse, CreateTodoInput, ResponseStatus, Todo } from './api'
+export { TodoStatus } from './api'
+export type {
+  ApiResponse,
+  CreateTodoInput,
+  PaginatedTodos,
+  ResponseStatus,
+  Todo,
+  TodoQuery,
+} from './api'

@@ -1,6 +1,6 @@
 import axios, { type AxiosRequestConfig } from 'axios'
 import { apiClient } from '@/api/client'
-import type { ApiResponse, CreateTodoInput, Todo } from '@/types'
+import type { ApiResponse, CreateTodoInput, PaginatedTodos, Todo, TodoQuery } from '@/types'
 
 async function request<T>(path: string, options?: AxiosRequestConfig): Promise<T> {
   try {
@@ -20,4 +20,10 @@ async function request<T>(path: string, options?: AxiosRequestConfig): Promise<T
 
 export async function createTodo(input: CreateTodoInput): Promise<Todo> {
   return request<Todo>('/todos', { method: 'POST', data: input })
+}
+
+export function fetchTodos(query: TodoQuery): Promise<PaginatedTodos> {
+  return request<PaginatedTodos>('/todos', {
+    params: query,
+  })
 }

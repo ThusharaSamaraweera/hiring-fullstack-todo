@@ -21,3 +21,27 @@ export interface CreateTodoInput {
   title: string
   description?: string
 }
+
+export interface PaginatedTodos {
+  items: Todo[]
+  pagination: {
+    page: number
+    limit: number
+    totalItems: number
+    totalPages: number
+  }
+}
+
+export const TodoStatus = {
+  ALL: 'all',
+  PENDING: 'pending',
+  COMPLETED: 'completed',
+} as const
+
+export type TodoStatus = (typeof TodoStatus)[keyof typeof TodoStatus]
+
+export interface TodoQuery {
+  page: number
+  limit: number
+  status: TodoStatus
+}
