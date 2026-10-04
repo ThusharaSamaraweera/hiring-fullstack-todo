@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { Button } from '@/components/Button'
-import { Modal } from '@/components/Modal'
+import { Button, Modal } from '@/components'
 import type { Todo, UpdateTodoInput } from '@/types'
-import { formatCreatedAt } from '@/utils/date'
+import { formatCreatedAt } from '@/utils'
 import { EditTodoModal } from './EditTodoModal'
 
 interface TodoItemProps {

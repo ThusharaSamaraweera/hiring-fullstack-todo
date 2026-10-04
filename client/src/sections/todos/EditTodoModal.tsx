@@ -1,7 +1,6 @@
 import { type FormEvent, useState } from 'react'
 import { ValidationError } from 'yup'
-import { Button } from '@/components/Button'
-import { Modal } from '@/components/Modal'
+import { Button, Modal } from '@/components'
 import type { Todo, UpdateTodoInput } from '@/types'
 import { todoFormSchema } from './TodoForm'
 

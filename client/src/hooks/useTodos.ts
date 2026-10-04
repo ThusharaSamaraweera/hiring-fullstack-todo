@@ -9,7 +9,7 @@ import {
   type TodoQuery,
   type UpdateTodoInput,
 } from '@/types'
-import { getErrorMessage } from '@/utils/errorMessage'
+import { getErrorMessage } from '@/utils'
 
 const initialTodoQuery: TodoQuery = {
   page: 1,

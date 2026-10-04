@@ -1,7 +1,7 @@
 import { type FormEvent, useState } from 'react'
 import * as yup from 'yup'
 import { ValidationError } from 'yup'
-import { Button } from '@/components/Button'
+import { Button } from '@/components'
 
 export const todoFormSchema = yup.object({
   title: yup

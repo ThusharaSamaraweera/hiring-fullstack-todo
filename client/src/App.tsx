@@ -1,4 +1,4 @@
-import { useTodos } from '@/hooks/useTodos'
+import { useTodos } from '@/hooks'
 import { HeroSection } from '@/sections/dashboard/HeroSection'
 import { TodoForm } from '@/sections/todos/TodoForm'
 import { TodoListSection } from '@/sections/todos/TodoListSection'

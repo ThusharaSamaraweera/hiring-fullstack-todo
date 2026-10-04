@@ -1,4 +1,4 @@
-import { Button } from '@/components/Button'
+import { Button } from '@/components'
 import { TodoStatus, type PaginatedTodos, type TodoQuery, type UpdateTodoInput } from '@/types'
 import { TodoItem } from './TodoItem'
 

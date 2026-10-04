@@ -1,4 +1,4 @@
-import { Button } from '@/components/Button'
+import { Button } from '@/components'
 import { TodoStatus, type TodoQuery } from '@/types'
 
 const statuses = Object.values(TodoStatus)
