@@ -1,75 +1,177 @@
-# React + TypeScript + Vite
+# Todo App Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React and TypeScript frontend for the Todo application.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Create todos with Yup validation
+- View todo details in a modal
+- Search todos with debounced input
+- Filter by all, pending, or completed status
+- Paginate todo results
+- Mark todos as completed or pending
+- Edit todos
+- Delete todos with confirmation
+- Loading states and toast feedback
 
-## React Compiler
+## Requirements
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 22.12.0 or later
+- npm 10 or later
+- The Todo API server running locally
 
-## Expanding the ESLint configuration
+## Environment
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Create `client/.env` from `client/.env.example`:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```env
+VITE_API_URL=http://localhost:4000/api
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+The development client runs at `http://127.0.0.1:8000` and the API server allows that origin. Start the API server before opening the client so todo requests can complete.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Commands
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Run these commands from the repository root.
 
+### Windows PowerShell
+
+`npm.cmd` avoids PowerShell execution-policy issues with `npm.ps1`.
+
+#### Install dependencies
+
+```powershell
+npm.cmd install
 ```
+
+#### Configure environment
+
+Create the local environment file:
+
+```powershell
+Copy-Item client/.env.example client/.env
+```
+
+Ensure `client/.env` contains:
+
+```env
+VITE_API_URL=http://localhost:4000/api
+```
+
+#### Start the application
+
+Start the API server in one terminal:
+
+```powershell
+npm.cmd run dev --workspace server
+```
+
+Start the client in a second terminal:
+
+```powershell
+npm.cmd run dev --workspace client
+```
+
+Open the client at:
+
+```text
+http://127.0.0.1:8000
+```
+
+The API runs at `http://localhost:4000`.
+
+#### Verify the client
+
+```powershell
+npm.cmd run typecheck --workspace client
+npm.cmd run lint --workspace client
+npm.cmd run build --workspace client
+npm.cmd run preview --workspace client
+```
+
+### Git Bash
+
+#### Install dependencies
+
+```bash
+npm install
+```
+
+#### Configure environment
+
+```bash
+cp client/.env.example client/.env
+```
+
+Ensure `client/.env` contains:
+
+```env
+VITE_API_URL=http://localhost:4000/api
+```
+
+#### Start the application
+
+Start the API server in one terminal:
+
+```bash
+npm run dev --workspace server
+```
+
+Start the client in a second terminal:
+
+```bash
+npm run dev --workspace client
+```
+
+Open the client at `http://127.0.0.1:8000`.
+
+The API runs at `http://localhost:4000`.
+
+#### Verify the client
+
+```bash
+npm run typecheck --workspace client
+npm run lint --workspace client
+npm run build --workspace client
+npm run preview --workspace client
+```
+
+## Client structure
+
+```text
+src/
+├── api/          # Axios client and Todo API functions
+├── components/   # Reusable UI components
+├── hooks/        # TanStack Query hooks
+├── sections/     # Dashboard and Todo UI sections
+├── types/        # Client API and domain types
+└── utils/        # Shared client utilities
+```
+
+## API integration
+
+The client uses Axios for HTTP requests and TanStack Query for server-state fetching and mutations. The API base URL is configured through `VITE_API_URL`.
+
+## Assumptions
+
+- The API server is running and reachable through `VITE_API_URL`.
+- API responses follow the documented API response format.
+- The backend handles validation, persistence, pagination, and error classification.
+- The client runs in a modern browser with JavaScript enabled.
+- The default page size is 10 todos.
+- Todo titles and descriptions are plain text.
+- Search and status filtering are supported by the API.
+- The client receives stable todo IDs from the server.
+
+## Limitations
+
+- No authentication, authorization, or user-specific todo handling.
+- No offline support or local persistence.
+- No real-time synchronization between browser sessions.
+- No advanced sorting or filtering.
+- No infinite scrolling; pagination uses Previous/Next controls.
+- Optimistic updates may be rolled back if the API request fails.
+- API availability is required for loading and modifying todos.
+- API URL and environment configuration must be set per environment.
+- No client-side cache persistence after a browser refresh.
+- Accessibility support is limited to the implemented labels, buttons, keyboard handling, and modal behavior.
