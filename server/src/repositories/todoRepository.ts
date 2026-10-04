@@ -1,6 +1,6 @@
 import { TodoModel, type TodoDocument } from '@/models/index.js';
-import { TodoStatus } from '@/types/index.js';
-import type { CreateTodoInput, ListTodosInput, UpdateTodoInput } from '@/validators/index.js';
+import { TodoStatus, type TodoUpdateFields } from '@/types/index.js';
+import type { CreateTodoInput, ListTodosInput } from '@/validators/index.js';
 import { escapeRegex } from '@/utils/regex.js';
 import { logger } from '../utils/logger.js';
 
@@ -43,11 +43,16 @@ export class TodoRepository {
     return todo.toObject() as TodoDocument;
   }
 
-  updateById(todoId: string, todoInput: UpdateTodoInput): Promise<TodoDocument | null> {
-    const update = {
-      ...(todoInput.title === undefined ? {} : { title: todoInput.title }),
-      ...(todoInput.description === undefined ? {} : { description: todoInput.description }),
-    };
+  findById(todoId: string): Promise<TodoDocument | null> {
+    return TodoModel.findById(todoId).lean<TodoDocument>().exec();
+  }
+
+  updateById(todoId: string, todoInput: TodoUpdateFields): Promise<TodoDocument | null> {
+    const update: TodoUpdateFields = {};
+
+    if (todoInput.title !== undefined) update.title = todoInput.title;
+    if (todoInput.description !== undefined) update.description = todoInput.description;
+    if (todoInput.done !== undefined) update.done = todoInput.done;
 
     return TodoModel.findByIdAndUpdate(todoId, update, { new: true, runValidators: true })
       .lean<TodoDocument>()

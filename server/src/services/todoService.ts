@@ -2,7 +2,7 @@ import type { CreateTodoInput, ListTodosInput, UpdateTodoInput } from '@/validat
 import { logger } from '@/utils/index.js';
 import type { TodoRepository } from '@/repositories/index.js';
 import { NotFoundException } from '@/exceptions/index.js';
-import { TodoOperation } from '@/types/index.js';
+import { TodoOperation, type TodoUpdateFields } from '@/types/index.js';
 
 export class TodoService {
   constructor(private readonly todoRepository: TodoRepository) {}
@@ -39,7 +39,11 @@ export class TodoService {
 
   async updateTodo(todoId: string, todoInput: UpdateTodoInput) {
     logger.debug('Updating todo in TodoRepository', { todoId, fields: Object.keys(todoInput) });
-    const todo = await this.todoRepository.updateById(todoId, todoInput);
+    const updateFields: TodoUpdateFields = {};
+    if (todoInput.title !== undefined) updateFields.title = todoInput.title;
+    if (todoInput.description !== undefined) updateFields.description = todoInput.description;
+
+    const todo = await this.todoRepository.updateById(todoId, updateFields);
 
     if (!todo) {
       logger.warn('Todo not found', { operation: TodoOperation.UPDATE, todoId });
@@ -57,5 +61,23 @@ export class TodoService {
       logger.warn('Todo not found', { operation: TodoOperation.DELETE, todoId });
       throw new NotFoundException('Todo not found');
     }
+  }
+
+  async completeTodo(todoId: string) {
+    logger.debug('Completing todo', { todoId });
+    const currentTodo = await this.todoRepository.findById(todoId);
+
+    if (!currentTodo) {
+      logger.warn('Todo not found', { operation: TodoOperation.COMPLETE, todoId });
+      throw new NotFoundException('Todo not found');
+    }
+
+    const completedTodo = await this.todoRepository.updateById(todoId, { done: true });
+    if (!completedTodo) {
+      logger.warn('Todo not found after completion', { operation: TodoOperation.COMPLETE, todoId });
+      throw new NotFoundException('Todo not found');
+    }
+
+    return completedTodo;
   }
 }

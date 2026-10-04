@@ -5,6 +5,13 @@ export enum TodoStatus {
 }
 
 export enum TodoOperation {
+  COMPLETE = 'complete',
   DELETE = 'delete',
   UPDATE = 'update',
+}
+
+export interface TodoUpdateFields {
+  title?: string;
+  description?: string;
+  done?: boolean;
 }
