@@ -35,10 +35,13 @@ export function TodoListSection({
 
   return (
     <section className="relative mt-6 rounded-2xl border border-stone-200 bg-white px-5 py-2 shadow-sm sm:px-6">
-      <div className="border-b border-stone-100 py-4">
+      <div className="flex items-baseline justify-between border-b border-stone-100 py-4">
         <h2 className="text-base font-semibold capitalize text-stone-900">
           {todoQuery.status === TodoStatus.ALL ? 'All tasks' : `${todoQuery.status} tasks`}
         </h2>
+        <span className="text-xs text-stone-400">
+          {todosPage?.pagination.totalItems ?? 0} total
+        </span>
       </div>
 
       {isLoadingTodos ? (
