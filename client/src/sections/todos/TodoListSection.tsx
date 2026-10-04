@@ -1,5 +1,5 @@
 import { Button } from '@/components/Button'
-import { TodoStatus, type PaginatedTodos, type TodoQuery } from '@/types'
+import { TodoStatus, type PaginatedTodos, type TodoQuery, type UpdateTodoInput } from '@/types'
 import { TodoItem } from './TodoItem'
 
 interface TodoListSectionProps {
@@ -11,6 +11,8 @@ interface TodoListSectionProps {
   onTodoQueryChange: (query: TodoQuery) => void
   isUpdatingTodoStatus: boolean
   onTodoStatusChange: (todoId: string, nextDone: boolean) => void
+  isUpdatingTodo: boolean
+  onUpdateTodo: (todoId: string, input: UpdateTodoInput) => Promise<unknown>
 }
 
 export function TodoListSection({
@@ -22,6 +24,8 @@ export function TodoListSection({
   onTodoQueryChange,
   isUpdatingTodoStatus,
   onTodoStatusChange,
+  isUpdatingTodo,
+  onUpdateTodo,
 }: TodoListSectionProps) {
   const todos = todosPage?.items ?? []
 
@@ -48,6 +52,8 @@ export function TodoListSection({
             todo={todo}
             isUpdatingTodoStatus={isUpdatingTodoStatus}
             onTodoStatusChange={onTodoStatusChange}
+            isUpdatingTodo={isUpdatingTodo}
+            onUpdateTodo={onUpdateTodo}
           />
         ))
       )}

@@ -17,6 +17,8 @@ function App() {
     hasTodoLoadError,
     isUpdatingTodoStatus,
     updateTodoStatus,
+    isUpdatingTodo,
+    updateTodo,
   } = useTodos()
 
   return (
@@ -34,6 +36,8 @@ function App() {
         onTodoQueryChange={setTodoQuery}
         isUpdatingTodoStatus={isUpdatingTodoStatus}
         onTodoStatusChange={updateTodoStatus}
+        isUpdatingTodo={isUpdatingTodo}
+        onUpdateTodo={updateTodo}
       />
     </main>
   )

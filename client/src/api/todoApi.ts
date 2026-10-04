@@ -1,6 +1,13 @@
 import axios, { type AxiosRequestConfig } from 'axios'
 import { apiClient } from '@/api/client'
-import type { ApiResponse, CreateTodoInput, PaginatedTodos, Todo, TodoQuery } from '@/types'
+import type {
+  ApiResponse,
+  CreateTodoInput,
+  PaginatedTodos,
+  Todo,
+  TodoQuery,
+  UpdateTodoInput,
+} from '@/types'
 
 async function request<T>(path: string, options?: AxiosRequestConfig): Promise<T> {
   try {
@@ -35,4 +42,8 @@ export function fetchTodos(query: TodoQuery): Promise<PaginatedTodos> {
 
 export function updateTodoStatus(todoId: string): Promise<Todo> {
   return request<Todo>(`/todos/${todoId}/complete`, { method: 'PATCH' })
+}
+
+export function updateTodo(todoId: string, input: UpdateTodoInput): Promise<Todo> {
+  return request<Todo>(`/todos/${todoId}`, { method: 'PUT', data: input })
 }

@@ -22,6 +22,11 @@ export interface CreateTodoInput {
   description?: string
 }
 
+export interface UpdateTodoInput {
+  title: string
+  description: string
+}
+
 export interface PaginatedTodos {
   items: Todo[]
   pagination: {

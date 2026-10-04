@@ -6,4 +6,5 @@ export type {
   ResponseStatus,
   Todo,
   TodoQuery,
+  UpdateTodoInput,
 } from './api'

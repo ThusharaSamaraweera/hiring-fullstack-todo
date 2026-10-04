@@ -1,21 +1,27 @@
 import { useState } from 'react'
 import { Button } from '@/components/Button'
 import { Modal } from '@/components/Modal'
-import type { Todo } from '@/types'
+import type { Todo, UpdateTodoInput } from '@/types'
 import { formatCreatedAt } from '@/utils/date'
+import { EditTodoModal } from './EditTodoModal'
 
 interface TodoItemProps {
   todo: Todo
   isUpdatingTodoStatus: boolean
   onTodoStatusChange: (todoId: string, nextDone: boolean) => void
+  isUpdatingTodo: boolean
+  onUpdateTodo: (todoId: string, input: UpdateTodoInput) => Promise<unknown>
 }
 
 export function TodoItem({
   todo,
   isUpdatingTodoStatus,
   onTodoStatusChange,
+  isUpdatingTodo,
+  onUpdateTodo,
 }: TodoItemProps) {
   const [isViewing, setIsViewing] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
 
   return (
     <article className="border-b border-stone-200 py-5 last:border-0">
@@ -68,12 +74,56 @@ export function TodoItem({
         </Button>
       </div>
 
+      <div className="ml-8 mt-2 flex justify-end gap-2 pt-2">
+        <Button
+          type="button"
+          variant="ghost"
+          aria-label="Edit task"
+          title="Edit task"
+          onClick={() => setIsEditing(true)}
+        >
+          <svg
+            aria-hidden="true"
+            className="size-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+          >
+            <path d="M12 20h9" />
+            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
+          </svg>
+        </Button>
+      </div>
+
       <Modal open={isViewing} title={todo.title} onClose={() => setIsViewing(false)}>
         <p className="whitespace-pre-wrap text-sm leading-6 text-stone-600">
           {todo.description || 'No description added.'}
         </p>
         <p className="mt-5 text-xs text-stone-400">Created {formatCreatedAt(todo.createdAt)}</p>
+        <div className="mt-8 flex justify-end border-t border-stone-100 pt-4">
+          <Button
+            type="button"
+            onClick={() => {
+              setIsViewing(false)
+              setIsEditing(true)
+            }}
+          >
+            Edit task
+          </Button>
+        </div>
       </Modal>
+
+      <EditTodoModal
+        todo={todo}
+        open={isEditing}
+        isUpdatingTodo={isUpdatingTodo}
+        onClose={() => setIsEditing(false)}
+        onSaveTodo={async (input) => {
+          await onUpdateTodo(todo._id, input)
+          setIsEditing(false)
+        }}
+      />
     </article>
   )
 }

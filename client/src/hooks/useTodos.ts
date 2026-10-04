@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { createTodo, fetchTodos, updateTodoStatus } from '@/api'
-import { TodoStatus, type CreateTodoInput, type PaginatedTodos, type TodoQuery } from '@/types'
+import { createTodo, fetchTodos, updateTodo, updateTodoStatus } from '@/api'
+import {
+  TodoStatus,
+  type CreateTodoInput,
+  type PaginatedTodos,
+  type TodoQuery,
+  type UpdateTodoInput,
+} from '@/types'
 import { getErrorMessage } from '@/utils/errorMessage'
 
 const initialTodoQuery: TodoQuery = {
@@ -69,6 +75,16 @@ export function useTodos() {
     },
   })
 
+  const updateMutation = useMutation({
+    mutationFn: ({ todoId, input }: { todoId: string; input: UpdateTodoInput }) =>
+      updateTodo(todoId, input),
+    onError: (error) => toast.error(getErrorMessage(error, 'Unable to update todo. Please try again.')),
+    onSuccess: () => {
+      toast.success('Todo updated successfully.')
+      void queryClient.invalidateQueries({ queryKey: ['todos'] })
+    },
+  })
+
   return {
     todoQuery,
     setTodoQuery,
@@ -82,5 +98,8 @@ export function useTodos() {
     updateTodoStatus: (todoId: string, nextDone: boolean) =>
       statusMutation.mutate({ todoId, nextDone }),
     isUpdatingTodoStatus: statusMutation.isPending,
+    updateTodo: (todoId: string, input: UpdateTodoInput) =>
+      updateMutation.mutateAsync({ todoId, input }),
+    isUpdatingTodo: updateMutation.isPending,
   }
 }
