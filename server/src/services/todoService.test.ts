@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { TodoDocument } from '../models/Todo.js';
 import type { TodoRepository } from '../repositories/todoRepository.js';
+import { TodoStatus } from '../validators/todoValidators.js';
 import { TodoService } from './todoService.js';
 
 describe('TodoService.createTodo', () => {
@@ -35,5 +36,49 @@ describe('TodoService.createTodo', () => {
     const service = new TodoService(repository);
 
     await expect(service.createTodo({ title: 'Test todo' })).rejects.toBe(repositoryError);
+  });
+
+  it('adds pagination metadata when listing todos', async () => {
+    const items = [{ title: 'Todo' }];
+    const repository = {
+      findTodos: vi.fn().mockResolvedValue({ items, totalItems: 21 }),
+    } as unknown as TodoRepository;
+    const service = new TodoService(repository);
+    const query = { page: 2, limit: 10, status: TodoStatus.ALL };
+
+    await expect(service.listTodos(query)).resolves.toEqual({
+      items,
+      pagination: {
+        page: 2,
+        limit: 10,
+        totalItems: 21,
+        totalPages: 3,
+      },
+    });
+    expect(repository.findTodos).toHaveBeenCalledWith(query);
+  });
+
+  it('returns an empty page when no todos match', async () => {
+    const repository = {
+      findTodos: vi.fn().mockResolvedValue({ items: [], totalItems: 0 }),
+    } as unknown as TodoRepository;
+    const service = new TodoService(repository);
+    const query = {
+      page: 1,
+      limit: 10,
+      search: 'missing',
+      status: TodoStatus.PENDING,
+    };
+
+    await expect(service.listTodos(query)).resolves.toEqual({
+      items: [],
+      pagination: {
+        page: 1,
+        limit: 10,
+        totalItems: 0,
+        totalPages: 0,
+      },
+    });
+    expect(repository.findTodos).toHaveBeenCalledWith(query);
   });
 });

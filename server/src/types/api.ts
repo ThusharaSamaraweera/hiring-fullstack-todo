@@ -1,7 +1,7 @@
 export type ApiStatus = 'success' | 'error';
 
 export interface ApiResponse<T = unknown> {
-  message: string;
+  message?: string;
   status: ApiStatus;
   statusCode: number;
   errorCode?: string;

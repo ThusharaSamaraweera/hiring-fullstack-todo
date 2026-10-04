@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import type { TodoDocument } from '../models/Todo.js';
 import type { TodoService } from '../services/todoService.js';
-import type { CreateTodoInput } from '../validators/todoValidators.js';
+import type { CreateTodoInput, ListTodosInput } from '../validators/todoValidators.js';
 import { logger, sendResponse } from '../utils/index.js';
 
 function toTodoResponse(todo: TodoDocument) {
@@ -17,9 +17,17 @@ function toTodoResponse(todo: TodoDocument) {
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
+  listTodos = async (request: Request, response: Response): Promise<void> => {
+    const todosPage = await this.todoService.listTodos(request.query as unknown as ListTodosInput);
+    sendResponse(response, 200, undefined, undefined, {
+      ...todosPage,
+      items: todosPage.items.map(toTodoResponse),
+    });
+  };
+
   createTodo = async (request: Request, response: Response): Promise<void> => {
     const todo = await this.todoService.createTodo(request.body as CreateTodoInput);
     logger.info('Todo created', { todoId: todo._id.toString() });
-    sendResponse(response, 201, 'Todo created successfully', undefined, toTodoResponse(todo));
+    sendResponse(response, 201, undefined, undefined, toTodoResponse(todo));
   };
 }

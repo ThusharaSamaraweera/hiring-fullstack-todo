@@ -1,5 +1,11 @@
 import { z } from 'zod';
 
+export enum TodoStatus {
+  ALL = 'all',
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+}
+
 const title = z
   .string({
     error: (issue) => (issue.input === undefined ? 'Title is required' : 'Title must be a string'),
@@ -18,4 +24,12 @@ export const createTodoSchema = z.object({
   description,
 });
 
+export const listTodosSchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(10),
+  search: z.string().trim().max(100, 'Search must be 100 characters or less').optional(),
+  status: z.enum([TodoStatus.ALL, TodoStatus.PENDING, TodoStatus.COMPLETED]).default(TodoStatus.ALL),
+});
+
 export type CreateTodoInput = z.infer<typeof createTodoSchema>;
+export type ListTodosInput = z.infer<typeof listTodosSchema>;

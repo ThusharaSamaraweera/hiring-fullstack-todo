@@ -5,7 +5,7 @@ import { logger } from '../utils/index.js';
 
 export function validate(schema: ZodType, source: 'body' | 'params' | 'query'): RequestHandler {
   return (request, _response, next) => {
-    logger.debug('Validating request', { source });
+    logger.info('Validating request', { source });
     const result = schema.safeParse(request[source]);
 
     if (!result.success) {
