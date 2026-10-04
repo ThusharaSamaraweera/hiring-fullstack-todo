@@ -47,3 +47,7 @@ export function updateTodoStatus(todoId: string): Promise<Todo> {
 export function updateTodo(todoId: string, input: UpdateTodoInput): Promise<Todo> {
   return request<Todo>(`/todos/${todoId}`, { method: 'PUT', data: input })
 }
+
+export function deleteTodo(todoId: string): Promise<void> {
+  return request<void>(`/todos/${todoId}`, { method: 'DELETE' })
+}

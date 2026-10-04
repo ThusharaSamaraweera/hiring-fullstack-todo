@@ -13,6 +13,8 @@ interface TodoListSectionProps {
   onTodoStatusChange: (todoId: string, nextDone: boolean) => void
   isUpdatingTodo: boolean
   onUpdateTodo: (todoId: string, input: UpdateTodoInput) => Promise<unknown>
+  isDeletingTodo: boolean
+  onDeleteTodo: (todoId: string) => void
 }
 
 export function TodoListSection({
@@ -26,6 +28,8 @@ export function TodoListSection({
   onTodoStatusChange,
   isUpdatingTodo,
   onUpdateTodo,
+  isDeletingTodo,
+  onDeleteTodo,
 }: TodoListSectionProps) {
   const todos = todosPage?.items ?? []
 
@@ -54,6 +58,8 @@ export function TodoListSection({
             onTodoStatusChange={onTodoStatusChange}
             isUpdatingTodo={isUpdatingTodo}
             onUpdateTodo={onUpdateTodo}
+            isDeletingTodo={isDeletingTodo}
+            onDeleteTodo={onDeleteTodo}
           />
         ))
       )}

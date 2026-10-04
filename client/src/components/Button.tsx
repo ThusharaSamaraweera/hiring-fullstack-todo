@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes } from 'react'
 
-type ButtonVariant = 'primary' | 'ghost' | 'outline' | 'icon'
+type ButtonVariant = 'primary' | 'ghost' | 'outline' | 'danger' | 'icon'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
@@ -13,6 +13,7 @@ const variants: Record<ButtonVariant, string> = {
   ghost: 'text-xs text-stone-500 hover:text-stone-900 disabled:opacity-50',
   outline:
     'rounded-md border border-stone-200 px-2 py-1 text-xs text-stone-600 hover:bg-stone-50 disabled:opacity-40',
+  danger: 'text-xs text-red-600 hover:text-red-800 disabled:opacity-50',
   icon: 'grid size-5 shrink-0 place-items-center rounded-md border text-xs font-bold transition disabled:opacity-50',
 }
 

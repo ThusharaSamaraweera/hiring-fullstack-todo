@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { createTodo, fetchTodos, updateTodo, updateTodoStatus } from '@/api'
+import { createTodo, deleteTodo, fetchTodos, updateTodo, updateTodoStatus } from '@/api'
 import {
   TodoStatus,
   type CreateTodoInput,
@@ -85,6 +85,43 @@ export function useTodos() {
     },
   })
 
+  const deleteMutation = useMutation({
+    mutationFn: (todoId: string) => deleteTodo(todoId),
+    onMutate: async (todoId) => {
+      const queryKey = ['todos', todoQuery] as const
+      await queryClient.cancelQueries({ queryKey })
+      const previousTodosPage = queryClient.getQueryData<PaginatedTodos>(queryKey)
+
+      queryClient.setQueryData<PaginatedTodos>(queryKey, (currentTodosPage) => {
+        if (!currentTodosPage) return currentTodosPage
+
+        const items = currentTodosPage.items.filter((todo) => todo._id !== todoId)
+        const totalItems = Math.max(0, currentTodosPage.pagination.totalItems - 1)
+
+        return {
+          ...currentTodosPage,
+          items,
+          pagination: {
+            ...currentTodosPage.pagination,
+            totalItems,
+            totalPages: Math.max(1, Math.ceil(totalItems / currentTodosPage.pagination.limit)),
+          },
+        }
+      })
+
+      return { previousTodosPage }
+    },
+    onError: (error, _todoId, context) => {
+      const queryKey = ['todos', todoQuery] as const
+      if (context?.previousTodosPage) queryClient.setQueryData(queryKey, context.previousTodosPage)
+      toast.error(getErrorMessage(error, 'Unable to delete todo. Please try again.'))
+    },
+    onSuccess: () => toast.success('Todo deleted successfully.'),
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ['todos'] })
+    },
+  })
+
   return {
     todoQuery,
     setTodoQuery,
@@ -101,5 +138,7 @@ export function useTodos() {
     updateTodo: (todoId: string, input: UpdateTodoInput) =>
       updateMutation.mutateAsync({ todoId, input }),
     isUpdatingTodo: updateMutation.isPending,
+    deleteTodo: deleteMutation.mutate,
+    isDeletingTodo: deleteMutation.isPending,
   }
 }

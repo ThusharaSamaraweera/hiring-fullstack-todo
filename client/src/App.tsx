@@ -19,6 +19,8 @@ function App() {
     updateTodoStatus,
     isUpdatingTodo,
     updateTodo,
+    isDeletingTodo,
+    deleteTodo,
   } = useTodos()
 
   return (
@@ -38,6 +40,8 @@ function App() {
         onTodoStatusChange={updateTodoStatus}
         isUpdatingTodo={isUpdatingTodo}
         onUpdateTodo={updateTodo}
+        isDeletingTodo={isDeletingTodo}
+        onDeleteTodo={deleteTodo}
       />
     </main>
   )

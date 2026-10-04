@@ -11,6 +11,8 @@ interface TodoItemProps {
   onTodoStatusChange: (todoId: string, nextDone: boolean) => void
   isUpdatingTodo: boolean
   onUpdateTodo: (todoId: string, input: UpdateTodoInput) => Promise<unknown>
+  isDeletingTodo: boolean
+  onDeleteTodo: (todoId: string) => void
 }
 
 export function TodoItem({
@@ -19,9 +21,12 @@ export function TodoItem({
   onTodoStatusChange,
   isUpdatingTodo,
   onUpdateTodo,
+  isDeletingTodo,
+  onDeleteTodo,
 }: TodoItemProps) {
   const [isViewing, setIsViewing] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
+  const [isDeleteConfirming, setIsDeleteConfirming] = useState(false)
 
   return (
     <article className="border-b border-stone-200 py-5 last:border-0">
@@ -74,7 +79,7 @@ export function TodoItem({
         </Button>
       </div>
 
-      <div className="ml-8 mt-2 flex justify-end gap-2 pt-2">
+      <div className="ml-8 mt-2 flex justify-end gap-3 pt-2">
         <Button
           type="button"
           variant="ghost"
@@ -94,6 +99,27 @@ export function TodoItem({
             <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
           </svg>
         </Button>
+        <Button
+          type="button"
+          variant="danger"
+          aria-label="Delete task"
+          title="Delete task"
+          onClick={() => setIsDeleteConfirming(true)}
+        >
+          <svg
+            aria-hidden="true"
+            className="size-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+          >
+            <path d="M3 6h18" />
+            <path d="M8 6V4h8v2" />
+            <path d="m19 6-1 14H6L5 6" />
+            <path d="M10 11v5M14 11v5" />
+          </svg>
+        </Button>
       </div>
 
       <Modal open={isViewing} title={todo.title} onClose={() => setIsViewing(false)}>
@@ -101,7 +127,13 @@ export function TodoItem({
           {todo.description || 'No description added.'}
         </p>
         <p className="mt-5 text-xs text-stone-400">Created {formatCreatedAt(todo.createdAt)}</p>
-        <div className="mt-8 flex justify-end border-t border-stone-100 pt-4">
+        <div className="mt-8 flex justify-end gap-2 border-t border-stone-100 pt-4">
+          <Button type="button" variant="danger" onClick={() => {
+            setIsViewing(false)
+            setIsDeleteConfirming(true)
+          }}>
+            Delete
+          </Button>
           <Button
             type="button"
             onClick={() => {
@@ -124,6 +156,32 @@ export function TodoItem({
           setIsEditing(false)
         }}
       />
+
+      <Modal
+        open={isDeleteConfirming}
+        title="Delete task?"
+        onClose={() => setIsDeleteConfirming(false)}
+      >
+        <p className="text-sm leading-6 text-stone-600">
+          This will permanently remove “{todo.title}”. This action cannot be undone.
+        </p>
+        <div className="mt-8 flex justify-end gap-2 border-t border-stone-100 pt-4">
+          <Button type="button" variant="ghost" onClick={() => setIsDeleteConfirming(false)}>
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            variant="danger"
+            disabled={isDeletingTodo}
+            onClick={() => {
+              onDeleteTodo(todo._id)
+              setIsDeleteConfirming(false)
+            }}
+          >
+            {isDeletingTodo ? 'Deleting...' : 'Delete task'}
+          </Button>
+        </div>
+      </Modal>
     </article>
   )
 }
