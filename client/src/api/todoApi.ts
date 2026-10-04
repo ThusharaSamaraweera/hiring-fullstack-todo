@@ -24,6 +24,11 @@ export async function createTodo(input: CreateTodoInput): Promise<Todo> {
 
 export function fetchTodos(query: TodoQuery): Promise<PaginatedTodos> {
   return request<PaginatedTodos>('/todos', {
-    params: query,
+    params: {
+      page: query.page,
+      limit: query.limit,
+      status: query.status,
+      ...(query.search ? { search: query.search } : {}),
+    },
   })
 }

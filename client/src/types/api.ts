@@ -43,5 +43,6 @@ export type TodoStatus = (typeof TodoStatus)[keyof typeof TodoStatus]
 export interface TodoQuery {
   page: number
   limit: number
+  search: string
   status: TodoStatus
 }
