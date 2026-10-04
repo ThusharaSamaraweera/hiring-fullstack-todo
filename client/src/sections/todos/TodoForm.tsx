@@ -17,7 +17,12 @@ export const todoFormSchema = yup.object({
 
 type FormErrors = Partial<Record<'title' | 'description', string>>
 
-export function TodoForm() {
+interface TodoFormProps {
+  isCreatingTodo?: boolean
+  onCreateTodo?: (input: { title: string; description?: string }) => Promise<unknown>
+}
+
+export function TodoForm({ isCreatingTodo = false, onCreateTodo }: TodoFormProps) {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [errors, setErrors] = useState<FormErrors>({})
@@ -40,12 +45,21 @@ export function TodoForm() {
     event.preventDefault()
 
     try {
-      await todoFormSchema.validate(
+      const values = await todoFormSchema.validate(
         { title, description },
         { abortEarly: false },
       )
 
       setErrors({})
+      await onCreateTodo?.({
+        title: values.title,
+        ...(values.description ? { description: values.description } : {}),
+      })
+
+      if (onCreateTodo) {
+        setTitle('')
+        setDescription('')
+      }
     } catch (error) {
       if (error instanceof ValidationError) {
         setErrors(
@@ -115,7 +129,7 @@ export function TodoForm() {
 
         <Button
           type="submit"
-          disabled={Object.keys(errors).length > 0}
+          disabled={isCreatingTodo || Object.keys(errors).length > 0}
         >
           <svg
             aria-hidden="true"
@@ -127,7 +141,7 @@ export function TodoForm() {
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14M5 12h14" />
           </svg>
-          Add task
+          {isCreatingTodo ? 'Adding...' : 'Add task'}
         </Button>
       </div>
     </form>
