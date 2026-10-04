@@ -1,7 +1,9 @@
+import { HeroSection } from '@/sections/dashboard/HeroSection'
+
 function App() {
   return (
-    <main>
-      <h1>Todo App</h1>
+    <main className="mx-auto min-h-screen max-w-5xl px-4 py-10 sm:px-8 sm:py-16">
+      <HeroSection />
     </main>
   )
 }
