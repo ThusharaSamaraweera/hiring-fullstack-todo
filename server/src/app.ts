@@ -4,6 +4,7 @@ import cors from "cors";
 import helmet from "helmet";
 import { env } from "./config/env.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
+import { requestLogger } from "./middleware/requestLogger.js";
 import { apiRouter } from "./routes/index.js";
 
 const app = express();
@@ -11,6 +12,7 @@ const app = express();
 app.use(helmet());
 app.use(compression());
 app.use(cors({ origin: env.CLIENT_ORIGIN }));
+app.use(requestLogger);
 app.use(express.json());
 
 app.get("/health", (_request, response) => {
