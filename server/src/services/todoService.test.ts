@@ -108,3 +108,24 @@ describe('TodoService.updateTodo', () => {
     );
   });
 });
+
+describe('TodoService.deleteTodo', () => {
+  it('deletes a todo through the repository', async () => {
+    const repository = {
+      deleteById: vi.fn().mockResolvedValue({ _id: 'todo-id' }),
+    } as unknown as TodoRepository;
+    const service = new TodoService(repository);
+
+    await expect(service.deleteTodo('todo-id')).resolves.toBeUndefined();
+    expect(repository.deleteById).toHaveBeenCalledWith('todo-id');
+  });
+
+  it('throws NotFoundException when the todo does not exist', async () => {
+    const repository = {
+      deleteById: vi.fn().mockResolvedValue(null),
+    } as unknown as TodoRepository;
+    const service = new TodoService(repository);
+
+    await expect(service.deleteTodo('missing-id')).rejects.toBeInstanceOf(NotFoundException);
+  });
+});

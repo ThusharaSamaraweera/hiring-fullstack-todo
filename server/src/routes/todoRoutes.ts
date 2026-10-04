@@ -18,5 +18,6 @@ router.put(
   validate(updateTodoSchema, 'body'),
   todoController.updateTodo,
 );
+router.delete('/:id', validate(todoIdSchema, 'params'), todoController.deleteTodo);
 
 export default router;

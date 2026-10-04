@@ -8,7 +8,7 @@ export class TodoService {
   constructor(private readonly todoRepository: TodoRepository) {}
 
   async listTodos(todoQuery: ListTodosInput) {
-    logger.info('Listing todos', {
+    logger.info('Listing todos in TodoRepository', {
       page: todoQuery.page,
       limit: todoQuery.limit,
       status: todoQuery.status,
@@ -33,12 +33,12 @@ export class TodoService {
   }
 
   async createTodo(todoInput: CreateTodoInput) {
-    logger.info('Creating todo');
+    logger.debug('Creating todo in TodoRepository', { fields: Object.keys(todoInput) });
     return this.todoRepository.createTodo(todoInput);
   }
 
   async updateTodo(todoId: string, todoInput: UpdateTodoInput) {
-    logger.debug('Updating todo', { todoId, fields: Object.keys(todoInput) });
+    logger.debug('Updating todo in TodoRepository', { todoId, fields: Object.keys(todoInput) });
     const todo = await this.todoRepository.updateById(todoId, todoInput);
 
     if (!todo) {
@@ -47,5 +47,15 @@ export class TodoService {
     }
 
     return todo;
+  }
+
+  async deleteTodo(todoId: string): Promise<void> {
+    logger.debug('Deleting todo in TodoRepository', { todoId });
+    const todo = await this.todoRepository.deleteById(todoId);
+
+    if (!todo) {
+      logger.warn('Todo not found', { operation: TodoOperation.DELETE, todoId });
+      throw new NotFoundException('Todo not found');
+    }
   }
 }

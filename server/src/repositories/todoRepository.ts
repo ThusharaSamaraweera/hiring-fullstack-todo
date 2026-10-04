@@ -53,4 +53,8 @@ export class TodoRepository {
       .lean<TodoDocument>()
       .exec();
   }
+
+  deleteById(todoId: string): Promise<TodoDocument | null> {
+    return TodoModel.findByIdAndDelete(todoId).lean<TodoDocument>().exec();
+  }
 }

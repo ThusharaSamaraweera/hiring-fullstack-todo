@@ -18,6 +18,7 @@ export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   listTodos = async (request: Request, response: Response): Promise<void> => {
+    logger.info('listTodos is called in TodoController');
     const todosPage = await this.todoService.listTodos(request.query as unknown as ListTodosInput);
     sendResponse(response, 200, undefined, undefined, {
       ...todosPage,
@@ -26,17 +27,26 @@ export class TodoController {
   };
 
   createTodo = async (request: Request, response: Response): Promise<void> => {
+    logger.info('createTodo is called in TodoController');
     const todo = await this.todoService.createTodo(request.body as CreateTodoInput);
     logger.info('Todo created', { todoId: todo._id.toString() });
     sendResponse(response, 201, undefined, undefined, toTodoResponse(todo));
   };
 
   updateTodo = async (request: Request, response: Response): Promise<void> => {
+    logger.info('updateTodo is called in TodoController', { todoId: request.params.id });
     const todo = await this.todoService.updateTodo(
       request.params.id as string,
       request.body as UpdateTodoInput,
     );
     logger.info('Todo updated', { todoId: todo._id.toString() });
     sendResponse(response, 200, undefined, undefined, toTodoResponse(todo));
+  };
+
+  deleteTodo = async (request: Request, response: Response): Promise<void> => {
+    logger.info('deleteTodo is called in TodoController', { todoId: request.params.id });
+    await this.todoService.deleteTodo(request.params.id as string);
+    logger.info('Todo deleted', { todoId: request.params.id });
+    sendResponse(response, 200, undefined, undefined);
   };
 }
