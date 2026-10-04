@@ -1,5 +1,8 @@
+import { useState } from 'react'
 import { Button } from '@/components/Button'
+import { Modal } from '@/components/Modal'
 import type { Todo } from '@/types'
+import { formatCreatedAt } from '@/utils/date'
 
 interface TodoItemProps {
   todo: Todo
@@ -12,6 +15,8 @@ export function TodoItem({
   isUpdatingTodoStatus,
   onTodoStatusChange,
 }: TodoItemProps) {
+  const [isViewing, setIsViewing] = useState(false)
+
   return (
     <article className="border-b border-stone-200 py-5 last:border-0">
       <div className="flex items-start gap-3">
@@ -38,25 +43,37 @@ export function TodoItem({
             </svg>
           )}
         </Button>
-        <div className="min-w-0">
-          <h3
-            className={`text-sm font-semibold ${
+        <Button
+          type="button"
+          variant="ghost"
+          className="min-w-0 flex-1 text-left"
+          onClick={() => setIsViewing(true)}
+        >
+          <span
+            className={`block text-sm font-semibold ${
               todo.done ? 'text-stone-400 line-through' : 'text-stone-900'
             }`}
           >
             {todo.title}
-          </h3>
+          </span>
           {todo.description && (
-            <p
+            <span
               className={`mt-1 line-clamp-2 text-sm leading-5 text-stone-500 ${
                 todo.done ? 'line-through' : ''
               }`}
             >
               {todo.description}
-            </p>
+            </span>
           )}
-        </div>
+        </Button>
       </div>
+
+      <Modal open={isViewing} title={todo.title} onClose={() => setIsViewing(false)}>
+        <p className="whitespace-pre-wrap text-sm leading-6 text-stone-600">
+          {todo.description || 'No description added.'}
+        </p>
+        <p className="mt-5 text-xs text-stone-400">Created {formatCreatedAt(todo.createdAt)}</p>
+      </Modal>
     </article>
   )
 }
