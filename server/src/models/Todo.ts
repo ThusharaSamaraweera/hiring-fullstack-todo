@@ -9,5 +9,7 @@ const todoSchema = new Schema(
   { timestamps: true },
 );
 
+todoSchema.index({ createdAt: -1, _id: -1 });
+
 export type TodoDocument = InferSchemaType<typeof todoSchema> & { _id: Types.ObjectId };
 export const TodoModel = model('Todo', todoSchema);
