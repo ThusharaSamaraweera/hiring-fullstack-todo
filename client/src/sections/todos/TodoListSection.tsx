@@ -9,6 +9,8 @@ interface TodoListSectionProps {
   isFetchingTodos: boolean
   hasTodoLoadError: boolean
   onTodoQueryChange: (query: TodoQuery) => void
+  isUpdatingTodoStatus: boolean
+  onTodoStatusChange: (todoId: string, nextDone: boolean) => void
 }
 
 export function TodoListSection({
@@ -18,6 +20,8 @@ export function TodoListSection({
   isFetchingTodos,
   hasTodoLoadError,
   onTodoQueryChange,
+  isUpdatingTodoStatus,
+  onTodoStatusChange,
 }: TodoListSectionProps) {
   const todos = todosPage?.items ?? []
 
@@ -38,7 +42,14 @@ export function TodoListSection({
       ) : todos.length === 0 ? (
         <p className="py-12 text-center text-sm text-stone-500">{getEmptyMessage(todoQuery)}</p>
       ) : (
-        todos.map((todo) => <TodoItem key={todo._id} todo={todo} />)
+        todos.map((todo) => (
+          <TodoItem
+            key={todo._id}
+            todo={todo}
+            isUpdatingTodoStatus={isUpdatingTodoStatus}
+            onTodoStatusChange={onTodoStatusChange}
+          />
+        ))
       )}
 
       {todosPage && todosPage.pagination.totalPages > 1 && (

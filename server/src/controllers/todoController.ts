@@ -50,10 +50,10 @@ export class TodoController {
     sendResponse(response, 200, undefined, undefined);
   };
 
-  completeTodo = async (request: Request, response: Response): Promise<void> => {
-    logger.info('completeTodo is called in TodoController', { todoId: request.params.id });
-    const todo = await this.todoService.completeTodo(request.params.id as string);
-    logger.info('Todo completed', { todoId: todo._id.toString() });
+  updateTodoStatus = async (request: Request, response: Response): Promise<void> => {
+    logger.info('updateTodoStatus is called in TodoController', { todoId: request.params.id });
+    const todo = await this.todoService.updateTodoStatus(request.params.id as string);
+    logger.info('Todo status updated', { todoId: todo._id.toString() });
     sendResponse(response, 200, undefined, undefined, toTodoResponse(todo));
   };
 }

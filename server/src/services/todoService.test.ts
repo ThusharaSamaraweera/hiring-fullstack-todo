@@ -130,7 +130,7 @@ describe('TodoService.deleteTodo', () => {
   });
 });
 
-describe('TodoService.completeTodo', () => {
+describe('TodoService.updateTodoStatus', () => {
   it('marks an existing todo as complete', async () => {
     const completedTodo = {
       _id: { toString: () => 'todo-id' },
@@ -143,7 +143,7 @@ describe('TodoService.completeTodo', () => {
     } as unknown as TodoRepository;
     const service = new TodoService(repository);
 
-    await expect(service.completeTodo('todo-id')).resolves.toBe(completedTodo);
+    await expect(service.updateTodoStatus('todo-id')).resolves.toBe(completedTodo);
     expect(repository.updateById).toHaveBeenCalledWith('todo-id', { done: true });
   });
 
@@ -153,7 +153,23 @@ describe('TodoService.completeTodo', () => {
     } as unknown as TodoRepository;
     const service = new TodoService(repository);
 
-    await expect(service.completeTodo('missing-id')).rejects.toBeInstanceOf(NotFoundException);
+    await expect(service.updateTodoStatus('missing-id')).rejects.toBeInstanceOf(NotFoundException);
     expect(repository.updateById).toBeUndefined();
+  });
+
+  it('marks a completed todo as pending', async () => {
+    const pendingTodo = {
+      _id: { toString: () => 'todo-id' },
+      title: 'Todo',
+      done: false,
+    } as unknown as TodoDocument;
+    const repository = {
+      findById: vi.fn().mockResolvedValue({ _id: 'todo-id', done: true }),
+      updateById: vi.fn().mockResolvedValue(pendingTodo),
+    } as unknown as TodoRepository;
+    const service = new TodoService(repository);
+
+    await expect(service.updateTodoStatus('todo-id')).resolves.toBe(pendingTodo);
+    expect(repository.updateById).toHaveBeenCalledWith('todo-id', { done: false });
   });
 });

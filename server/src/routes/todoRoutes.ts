@@ -19,6 +19,6 @@ router.put(
   todoController.updateTodo,
 );
 router.delete('/:id', validate(todoIdSchema, 'params'), todoController.deleteTodo);
-router.patch('/:id/complete', validate(todoIdSchema, 'params'), todoController.completeTodo);
+router.patch('/:id/complete', validate(todoIdSchema, 'params'), todoController.updateTodoStatus);
 
 export default router;

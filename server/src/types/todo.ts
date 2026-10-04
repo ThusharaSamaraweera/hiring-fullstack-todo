@@ -5,7 +5,7 @@ export enum TodoStatus {
 }
 
 export enum TodoOperation {
-  COMPLETE = 'complete',
+  UPDATE_STATUS = 'updateStatus',
   DELETE = 'delete',
   UPDATE = 'update',
 }

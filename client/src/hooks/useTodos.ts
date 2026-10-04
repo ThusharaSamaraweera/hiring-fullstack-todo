@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-import { createTodo, fetchTodos } from '@/api'
-import { TodoStatus, type CreateTodoInput, type TodoQuery } from '@/types'
+import { createTodo, fetchTodos, updateTodoStatus } from '@/api'
+import { TodoStatus, type CreateTodoInput, type PaginatedTodos, type TodoQuery } from '@/types'
+import { getErrorMessage } from '@/utils/errorMessage'
 
 const initialTodoQuery: TodoQuery = {
   page: 1,
@@ -22,15 +23,48 @@ export function useTodos() {
 
   useEffect(() => {
     if (todosQuery.error) {
-      toast.error('Unable to load todos. Please try again.')
+      toast.error(getErrorMessage(todosQuery.error, 'Unable to load todos. Please try again.'))
     }
   }, [todosQuery.error])
 
   const createMutation = useMutation({
     mutationFn: (input: CreateTodoInput) => createTodo(input),
-    onError: () => toast.error('Unable to create todo. Please try again.'),
+    onError: (error) => toast.error(getErrorMessage(error, 'Unable to create todo. Please try again.')),
     onSuccess: () => {
       toast.success('Todo created successfully.')
+      void queryClient.invalidateQueries({ queryKey: ['todos'] })
+    },
+  })
+
+  const statusMutation = useMutation({
+    mutationFn: ({ todoId }: { todoId: string; nextDone: boolean }) => updateTodoStatus(todoId),
+    onMutate: async ({ todoId, nextDone }) => {
+      const queryKey = ['todos', todoQuery] as const
+      await queryClient.cancelQueries({ queryKey })
+      const previousTodosPage = queryClient.getQueryData<PaginatedTodos>(queryKey)
+
+      queryClient.setQueryData<PaginatedTodos>(queryKey, (currentTodosPage) => {
+        if (!currentTodosPage) return currentTodosPage
+
+        return {
+          ...currentTodosPage,
+          items: currentTodosPage.items.map((todo) =>
+            todo._id === todoId ? { ...todo, done: nextDone } : todo,
+          ),
+        }
+      })
+
+      return { previousTodosPage }
+    },
+    onError: (error, _variables, context) => {
+      const queryKey = ['todos', todoQuery] as const
+      if (context?.previousTodosPage) queryClient.setQueryData(queryKey, context.previousTodosPage)
+      toast.error(getErrorMessage(error, 'Unable to update todo status. Please try again.'))
+    },
+    onSuccess: (_todo, { nextDone }) => {
+      toast.success(nextDone ? 'Todo completed successfully.' : 'Todo marked as pending.')
+    },
+    onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: ['todos'] })
     },
   })
@@ -45,5 +79,8 @@ export function useTodos() {
     createTodo: createMutation.mutateAsync,
     isCreatingTodo: createMutation.isPending,
     createTodoError: createMutation.error,
+    updateTodoStatus: (todoId: string, nextDone: boolean) =>
+      statusMutation.mutate({ todoId, nextDone }),
+    isUpdatingTodoStatus: statusMutation.isPending,
   }
 }

@@ -32,3 +32,7 @@ export function fetchTodos(query: TodoQuery): Promise<PaginatedTodos> {
     },
   })
 }
+
+export function updateTodoStatus(todoId: string): Promise<Todo> {
+  return request<Todo>(`/todos/${todoId}/complete`, { method: 'PATCH' })
+}

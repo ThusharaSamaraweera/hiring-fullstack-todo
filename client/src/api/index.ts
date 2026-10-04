@@ -1,2 +1,2 @@
 export { apiClient } from './client'
-export { createTodo, fetchTodos } from './todoApi'
+export { createTodo, fetchTodos, updateTodoStatus } from './todoApi'

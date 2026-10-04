@@ -63,21 +63,21 @@ export class TodoService {
     }
   }
 
-  async completeTodo(todoId: string) {
-    logger.debug('Completing todo', { todoId });
+  async updateTodoStatus(todoId: string) {
+    logger.debug('Changing todo completion status', { todoId });
     const currentTodo = await this.todoRepository.findById(todoId);
 
     if (!currentTodo) {
-      logger.warn('Todo not found', { operation: TodoOperation.COMPLETE, todoId });
+      logger.warn('Todo not found', { operation: TodoOperation.UPDATE_STATUS, todoId });
       throw new NotFoundException('Todo not found');
     }
 
-    const completedTodo = await this.todoRepository.updateById(todoId, { done: true });
-    if (!completedTodo) {
-      logger.warn('Todo not found after completion', { operation: TodoOperation.COMPLETE, todoId });
+    const updatedTodo = await this.todoRepository.updateById(todoId, { done: !currentTodo.done });
+    if (!updatedTodo) {
+      logger.warn('Todo not found after status update', { operation: TodoOperation.UPDATE_STATUS, todoId });
       throw new NotFoundException('Todo not found');
     }
 
-    return completedTodo;
+    return updatedTodo;
   }
 }
