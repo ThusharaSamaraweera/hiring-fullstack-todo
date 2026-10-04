@@ -1,7 +1,9 @@
 export {
   createTodoSchema,
   listTodosSchema,
-  TodoStatus,
+  todoIdSchema,
+  updateTodoSchema,
   type CreateTodoInput,
   type ListTodosInput,
+  type UpdateTodoInput,
 } from './todoValidators.js';

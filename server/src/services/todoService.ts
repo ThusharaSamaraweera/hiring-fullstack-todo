@@ -1,6 +1,8 @@
-import type { CreateTodoInput, ListTodosInput } from '@/validators/index.js';
+import type { CreateTodoInput, ListTodosInput, UpdateTodoInput } from '@/validators/index.js';
 import { logger } from '@/utils/index.js';
 import type { TodoRepository } from '@/repositories/index.js';
+import { NotFoundException } from '@/exceptions/index.js';
+import { TodoOperation } from '@/types/index.js';
 
 export class TodoService {
   constructor(private readonly todoRepository: TodoRepository) {}
@@ -33,5 +35,17 @@ export class TodoService {
   async createTodo(todoInput: CreateTodoInput) {
     logger.info('Creating todo');
     return this.todoRepository.createTodo(todoInput);
+  }
+
+  async updateTodo(todoId: string, todoInput: UpdateTodoInput) {
+    logger.debug('Updating todo', { todoId, fields: Object.keys(todoInput) });
+    const todo = await this.todoRepository.updateById(todoId, todoInput);
+
+    if (!todo) {
+      logger.warn('Todo not found', { operation: TodoOperation.UPDATE, todoId });
+      throw new NotFoundException('Todo not found');
+    }
+
+    return todo;
   }
 }

@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { createTodoSchema, listTodosSchema, TodoStatus } from './todoValidators.js';
+import {
+  createTodoSchema,
+  listTodosSchema,
+  todoIdSchema,
+  updateTodoSchema,
+} from './todoValidators.js';
+import { TodoStatus } from '@/types/index.js';
 
 describe('createTodoSchema', () => {
   it('accepts a valid todo', () => {
@@ -48,6 +54,10 @@ describe('createTodoSchema', () => {
       ]);
     }
   });
+
+  it('rejects unknown fields', () => {
+    expect(createTodoSchema.safeParse({ title: 'Todo', unexpected: true }).success).toBe(false);
+  });
 });
 
 describe('listTodosSchema', () => {
@@ -93,5 +103,37 @@ describe('listTodosSchema', () => {
     if (!result.success) {
       expect(result.error.issues[0]?.message).toBe('Search must be 100 characters or less');
     }
+  });
+
+  it('rejects unknown query fields', () => {
+    expect(listTodosSchema.safeParse({ unexpected: 'value' }).success).toBe(false);
+  });
+});
+
+describe('updateTodoSchema', () => {
+  it('accepts a partial update', () => {
+    expect(updateTodoSchema.safeParse({ title: 'Updated title' }).success).toBe(true);
+    expect(updateTodoSchema.safeParse({ description: 'Updated description' }).success).toBe(true);
+  });
+
+  it('rejects an empty update', () => {
+    const result = updateTodoSchema.safeParse({});
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues[0]?.message).toBe('At least one field must be provided');
+    }
+  });
+
+  it('rejects unknown update fields', () => {
+    expect(updateTodoSchema.safeParse({ title: 'Updated', unexpected: true }).success).toBe(false);
+  });
+});
+
+describe('todoIdSchema', () => {
+  it('accepts a valid MongoDB id and rejects an invalid id', () => {
+    expect(todoIdSchema.safeParse({ id: '507f1f77bcf86cd799439011' }).success).toBe(true);
+    expect(todoIdSchema.safeParse({ id: 'invalid-id' }).success).toBe(false);
+    expect(todoIdSchema.safeParse({ id: '507f1f77bcf86cd799439011', extra: true }).success).toBe(false);
   });
 });

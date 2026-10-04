@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { TodoDocument } from '../models/Todo.js';
 import type { TodoRepository } from '../repositories/todoRepository.js';
-import { TodoStatus } from '../validators/todoValidators.js';
+import { NotFoundException } from '../exceptions/ApiException.js';
+import { TodoStatus } from '@/types/index.js';
 import { TodoService } from './todoService.js';
 
 describe('TodoService.createTodo', () => {
@@ -80,5 +81,30 @@ describe('TodoService.createTodo', () => {
       },
     });
     expect(repository.findTodos).toHaveBeenCalledWith(query);
+  });
+});
+
+describe('TodoService.updateTodo', () => {
+  it('updates a todo through the repository', async () => {
+    const updatedTodo = { _id: { toString: () => 'todo-id' }, title: 'Updated todo' } as unknown as TodoDocument;
+    const input = { title: 'Updated todo' };
+    const repository = {
+      updateById: vi.fn().mockResolvedValue(updatedTodo),
+    } as unknown as TodoRepository;
+    const service = new TodoService(repository);
+
+    await expect(service.updateTodo('todo-id', input)).resolves.toBe(updatedTodo);
+    expect(repository.updateById).toHaveBeenCalledWith('todo-id', input);
+  });
+
+  it('throws NotFoundException when the todo does not exist', async () => {
+    const repository = {
+      updateById: vi.fn().mockResolvedValue(null),
+    } as unknown as TodoRepository;
+    const service = new TodoService(repository);
+
+    await expect(service.updateTodo('missing-id', { title: 'Updated todo' })).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
   });
 });

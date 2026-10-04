@@ -1,5 +1,6 @@
 import { TodoModel, type TodoDocument } from '@/models/index.js';
-import { TodoStatus, type CreateTodoInput, type ListTodosInput } from '@/validators/index.js';
+import { TodoStatus } from '@/types/index.js';
+import type { CreateTodoInput, ListTodosInput, UpdateTodoInput } from '@/validators/index.js';
 import { escapeRegex } from '@/utils/regex.js';
 import { logger } from '../utils/logger.js';
 
@@ -40,5 +41,16 @@ export class TodoRepository {
     });
     await todo.save();
     return todo.toObject() as TodoDocument;
+  }
+
+  updateById(todoId: string, todoInput: UpdateTodoInput): Promise<TodoDocument | null> {
+    const update = {
+      ...(todoInput.title === undefined ? {} : { title: todoInput.title }),
+      ...(todoInput.description === undefined ? {} : { description: todoInput.description }),
+    };
+
+    return TodoModel.findByIdAndUpdate(todoId, update, { new: true, runValidators: true })
+      .lean<TodoDocument>()
+      .exec();
   }
 }
