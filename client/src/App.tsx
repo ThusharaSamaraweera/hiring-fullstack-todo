@@ -13,6 +13,7 @@ function App() {
     setTodoQuery,
     todosPage,
     isLoadingTodos,
+    isFetchingTodos,
     hasTodoLoadError,
   } = useTodos()
 
@@ -26,7 +27,9 @@ function App() {
         todoQuery={todoQuery}
         todosPage={todosPage}
         isLoadingTodos={isLoadingTodos}
+        isFetchingTodos={isFetchingTodos}
         hasTodoLoadError={hasTodoLoadError}
+        onTodoQueryChange={setTodoQuery}
       />
     </main>
   )

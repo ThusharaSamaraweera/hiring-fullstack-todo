@@ -1,3 +1,4 @@
+import { Button } from '@/components/Button'
 import { TodoStatus, type PaginatedTodos, type TodoQuery } from '@/types'
 import { TodoItem } from './TodoItem'
 
@@ -5,14 +6,23 @@ interface TodoListSectionProps {
   todoQuery: TodoQuery
   todosPage: PaginatedTodos | undefined
   isLoadingTodos: boolean
+  isFetchingTodos: boolean
   hasTodoLoadError: boolean
+  onTodoQueryChange: (query: TodoQuery) => void
 }
 
-export function TodoListSection({ todoQuery, todosPage, isLoadingTodos, hasTodoLoadError }: TodoListSectionProps) {
+export function TodoListSection({
+  todoQuery,
+  todosPage,
+  isLoadingTodos,
+  isFetchingTodos,
+  hasTodoLoadError,
+  onTodoQueryChange,
+}: TodoListSectionProps) {
   const todos = todosPage?.items ?? []
 
   return (
-    <section className="mt-6 rounded-2xl border border-stone-200 bg-white px-5 py-2 shadow-sm sm:px-6">
+    <section className="relative mt-6 rounded-2xl border border-stone-200 bg-white px-5 py-2 shadow-sm sm:px-6">
       <div className="border-b border-stone-100 py-4">
         <h2 className="text-base font-semibold capitalize text-stone-900">
           {todoQuery.status === TodoStatus.ALL ? 'All tasks' : `${todoQuery.status} tasks`}
@@ -29,6 +39,36 @@ export function TodoListSection({ todoQuery, todosPage, isLoadingTodos, hasTodoL
         <p className="py-12 text-center text-sm text-stone-500">{getEmptyMessage(todoQuery)}</p>
       ) : (
         todos.map((todo) => <TodoItem key={todo._id} todo={todo} />)
+      )}
+
+      {todosPage && todosPage.pagination.totalPages > 1 && (
+        <nav className="flex items-center justify-center gap-4 py-5 text-xs text-stone-500" aria-label="Task pages">
+          <Button
+            type="button"
+            variant="outline"
+            disabled={todoQuery.page === 1}
+            onClick={() => onTodoQueryChange({ ...todoQuery, page: todoQuery.page - 1 })}
+          >
+            Previous
+          </Button>
+          <span>
+            Page {todoQuery.page} of {todosPage.pagination.totalPages}
+          </span>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={todoQuery.page === todosPage.pagination.totalPages}
+            onClick={() => onTodoQueryChange({ ...todoQuery, page: todoQuery.page + 1 })}
+          >
+            Next
+          </Button>
+        </nav>
+      )}
+
+      {isFetchingTodos && !isLoadingTodos && (
+        <div className="pointer-events-none absolute inset-0 z-10 grid place-items-center rounded-2xl bg-white/55" aria-live="polite">
+          <span className="size-8 animate-spin rounded-full border-4 border-stone-200 border-t-lime-700" aria-label="Loading updated todos" />
+        </div>
       )}
     </section>
   )
