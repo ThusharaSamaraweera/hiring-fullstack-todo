@@ -3,6 +3,9 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "rootDir": "src",
     "outDir": "dist",
     "noEmitOnError": true

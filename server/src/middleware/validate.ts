@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express';
 import type { ZodType } from 'zod';
-import { BadRequestException } from '../exceptions/ApiException.js';
-import { logger } from '../utils/index.js';
+import { BadRequestException } from '@/exceptions/index.js';
+import { logger } from '@/utils/index.js';
 
 export function validate(schema: ZodType, source: 'body' | 'params' | 'query'): RequestHandler {
   return (request, _response, next) => {

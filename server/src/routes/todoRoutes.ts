@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { TodoController } from '../controllers/todoController.js';
-import { validate } from '../middleware/validate.js';
-import { TodoRepository } from '../repositories/todoRepository.js';
-import { TodoService } from '../services/todoService.js';
-import { createTodoSchema, listTodosSchema } from '../validators/todoValidators.js';
+import { TodoController } from '@/controllers/index.js';
+import { validate } from '@/middleware/index.js';
+import { TodoRepository } from '@/repositories/index.js';
+import { TodoService } from '@/services/index.js';
+import { createTodoSchema, listTodosSchema } from '@/validators/index.js';
 
 const todoRepository = new TodoRepository();
 const todoService = new TodoService(todoRepository);

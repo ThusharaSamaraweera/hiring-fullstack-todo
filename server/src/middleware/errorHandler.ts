@@ -1,6 +1,6 @@
 import type { ErrorRequestHandler, RequestHandler } from 'express';
-import { ApiException, InternalServerException } from '../exceptions/ApiException.js';
-import { logger, sendResponse } from '../utils/index.js';
+import { ApiException, InternalServerException } from '@/exceptions/index.js';
+import { logger, sendResponse } from '@/utils/index.js';
 
 export const notFoundHandler: RequestHandler = (_request, response) => {
   sendResponse(response, 404, 'Route not found', '404');

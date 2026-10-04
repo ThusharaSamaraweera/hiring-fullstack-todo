@@ -1,6 +1,6 @@
-import type { CreateTodoInput, ListTodosInput } from '../validators/todoValidators.js';
-import { logger } from '../utils/index.js';
-import type { TodoRepository } from '../repositories/todoRepository.js';
+import type { CreateTodoInput, ListTodosInput } from '@/validators/index.js';
+import { logger } from '@/utils/index.js';
+import type { TodoRepository } from '@/repositories/index.js';
 
 export class TodoService {
   constructor(private readonly todoRepository: TodoRepository) {}

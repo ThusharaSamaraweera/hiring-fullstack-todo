@@ -2,10 +2,9 @@ import express from "express";
 import compression from "compression";
 import cors from "cors";
 import helmet from "helmet";
-import { env } from "./config/env.js";
-import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
-import { requestLogger } from "./middleware/requestLogger.js";
-import { apiRouter } from "./routes/index.js";
+import { env } from "@/config/env.js";
+import { errorHandler, notFoundHandler, requestLogger } from "@/middleware/index.js";
+import { apiRouter } from "@/routes/index.js";
 
 const app = express();
 

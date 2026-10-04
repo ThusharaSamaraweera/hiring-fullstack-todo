@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express';
-import type { TodoDocument } from '../models/Todo.js';
-import type { TodoService } from '../services/todoService.js';
-import type { CreateTodoInput, ListTodosInput } from '../validators/todoValidators.js';
-import { logger, sendResponse } from '../utils/index.js';
+import type { TodoDocument } from '@/models/index.js';
+import type { TodoService } from '@/services/index.js';
+import type { CreateTodoInput, ListTodosInput } from '@/validators/index.js';
+import { logger, sendResponse } from '@/utils/index.js';
 
 function toTodoResponse(todo: TodoDocument) {
   return {

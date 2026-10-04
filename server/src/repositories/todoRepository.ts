@@ -1,6 +1,6 @@
-import { TodoModel, type TodoDocument } from '../models/Todo.js';
-import { TodoStatus, type CreateTodoInput, type ListTodosInput } from '../validators/todoValidators.js';
-import { escapeRegex } from '../utils/regex.js';
+import { TodoModel, type TodoDocument } from '@/models/index.js';
+import { TodoStatus, type CreateTodoInput, type ListTodosInput } from '@/validators/index.js';
+import { escapeRegex } from '@/utils/regex.js';
 import { logger } from '../utils/logger.js';
 
 export class TodoRepository {

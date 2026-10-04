@@ -1,7 +1,7 @@
-import { env } from "./config/env.js";
-import { connectToDatabase } from "./database/dbClient/connect.js";
-import { app } from "./app.js";
-import { registerProcessErrorHandlers } from "./utils/index.js";
+import { env } from "@/config/env.js";
+import { connectToDatabase } from "@/database/dbClient/connect.js";
+import { app } from "@/app.js";
+import { registerProcessErrorHandlers } from "@/utils/index.js";
 
 registerProcessErrorHandlers();
 
