@@ -3,11 +3,25 @@
   "private": true,
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "lint": "eslint . --no-error-on-unmatched-pattern"
+    "dev": "tsx watch src/app.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/app.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.6.4",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
 }
