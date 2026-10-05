@@ -8,6 +8,7 @@ React and TypeScript frontend for the Todo application.
 - View todo details in a modal
 - Search todos with debounced input
 - Filter by all, pending, or completed status
+- Sort by newly created, older created, or recently modified
 - Paginate todo results
 - Mark todos as completed or pending
 - Edit todos
@@ -150,7 +151,7 @@ src/
 
 ## API integration
 
-The client uses Axios for HTTP requests and TanStack Query for server-state fetching and mutations. The API base URL is configured through `VITE_API_URL`.
+The client uses Axios for HTTP requests and TanStack Query for server-state fetching and mutations. The API base URL is configured through `VITE_API_URL`. Search, status filtering, pagination, and the predefined sort options are handled through the server API.
 
 ## Assumptions
 
@@ -160,7 +161,7 @@ The client uses Axios for HTTP requests and TanStack Query for server-state fetc
 - The client runs in a modern browser with JavaScript enabled.
 - The default page size is 10 todos.
 - Todo titles and descriptions are plain text.
-- Search and status filtering are supported by the API.
+- Search, status filtering, and predefined sorting are supported by the API.
 - The client receives stable todo IDs from the server.
 
 ## Limitations
@@ -168,7 +169,7 @@ The client uses Axios for HTTP requests and TanStack Query for server-state fetc
 - No authentication, authorization, or user-specific todo handling.
 - No offline support or local persistence.
 - No real-time synchronization between browser sessions.
-- No advanced sorting or filtering.
+- No arbitrary/custom sorting or filtering.
 - No infinite scrolling; pagination uses Previous/Next controls.
 - Optimistic updates may be rolled back if the API request fails.
 - API availability is required for loading and modifying todos.

@@ -73,7 +73,7 @@ npm run build --workspace server
 | Method | Endpoint | Description |
 | --- | --- | --- |
 | GET | `/health` | Health check |
-| GET | `/api/todos` | List todos with optional `page`, `limit`, `search`, and `status` query parameters |
+| GET | `/api/todos` | List todos with optional `page`, `limit`, `search`, `status`, and `sort` query parameters |
 | POST | `/api/todos` | Create a todo |
 | PUT | `/api/todos/:id` | Update a todo title or description |
 | PATCH | `/api/todos/:id/done` | Change a todo between pending and completed |
@@ -87,6 +87,8 @@ Example create request body:
   "description": "Milk, fruit, and coffee"
 }
 ```
+
+Supported `sort` values are `newest` (default), `oldest`, and `recentlyModified`.
 
 ## Architecture
 
@@ -108,7 +110,7 @@ Responses use a consistent envelope with `status`, `statusCode`, optional `messa
 
 - MongoDB is reachable through `MONGODB_URI`.
 - The client origin matches `CLIENT_ORIGIN`.
-- The API is used by the Todo client and does not require user authentication for this assignment.
+- The API is used by the Todo client and does not require user authentication.
 - Todo titles and descriptions are plain text.
 
 ## Limitations
@@ -117,4 +119,4 @@ Responses use a consistent envelope with `status`, `statusCode`, optional `messa
 - No rate limiting or API versioning.
 - No soft delete or restore support.
 - The completion update is a read-then-update operation, so simultaneous requests can conflict.
-- Page-based pagination is suitable for this assignment but may need cursor-based pagination at a much larger scale.
+- Page-based pagination is suitable for the current scope but may need cursor-based pagination at a much larger scale.

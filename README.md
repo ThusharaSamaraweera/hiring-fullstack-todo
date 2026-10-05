@@ -5,7 +5,7 @@ A full-stack TODO application built as an npm workspaces monorepo. The React cli
 ## Features
 
 - Create, view, edit, complete, restore, and delete todos
-- Search, status filtering, and page-based pagination
+- Search, status filtering, predefined sorting, and page-based pagination
 - Client and server request validation
 - Loading states, error feedback, and optimistic status/delete updates
 
@@ -107,7 +107,7 @@ Husky runs the root `.husky/pre-commit` hook before each commit. It runs linting
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
-| GET | `/api/todos` | List todos with optional search, status, and pagination query parameters |
+| GET | `/api/todos` | List todos with optional search, status, sort, and pagination query parameters |
 | POST | `/api/todos` | Create a todo |
 | PUT | `/api/todos/:id` | Update a todo title or description |
 | PATCH | `/api/todos/:id/done` | Change a todo between pending and completed |
@@ -127,7 +127,7 @@ No shared workspace package is included because the client and server currently 
 
 ## Scope and limitations
 
-- This assignment has no authentication, authorization, or user ownership.
-- It does not provide real-time synchronization, offline support, advanced sorting, or soft-delete recovery.
+- This application has no authentication, authorization, or user ownership.
+- It does not provide real-time synchronization, offline support, arbitrary/custom sorting, or soft-delete recovery.
 - The client requires the API and MongoDB to be available for normal operation.
-- Page-based pagination is appropriate for the assignment but may need a cursor-based approach for much larger datasets.
+- Page-based pagination is appropriate for the current scope but may need a cursor-based approach for much larger datasets.
