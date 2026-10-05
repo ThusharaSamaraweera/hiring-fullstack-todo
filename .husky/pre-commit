@@ -1,0 +1,8 @@
+npm.cmd run lint
+npm.cmd run typecheck
+
+if git diff --cached --quiet -- server; then
+  echo "No server changes; skipping server tests."
+else
+  npm.cmd run test --workspace server
+fi
