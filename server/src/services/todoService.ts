@@ -13,6 +13,7 @@ export class TodoService {
       limit: todoQuery.limit,
       status: todoQuery.status,
       hasSearch: Boolean(todoQuery.search),
+      sort: todoQuery.sort,
     });
 
     const todosResult = await this.todoRepository.findTodos(todoQuery);
@@ -33,12 +34,12 @@ export class TodoService {
   }
 
   async createTodo(todoInput: CreateTodoInput) {
-    logger.debug('Creating todo in TodoRepository', { fields: Object.keys(todoInput) });
+    logger.info('Creating todo in TodoRepository', { fields: Object.keys(todoInput) });
     return this.todoRepository.createTodo(todoInput);
   }
 
   async updateTodo(todoId: string, todoInput: UpdateTodoInput) {
-    logger.debug('Updating todo in TodoRepository', { todoId, fields: Object.keys(todoInput) });
+    logger.info('Updating todo in TodoRepository', { todoId, fields: Object.keys(todoInput) });
     const updateFields: TodoUpdateFields = {};
     if (todoInput.title !== undefined) updateFields.title = todoInput.title;
     if (todoInput.description !== undefined) updateFields.description = todoInput.description;
@@ -54,7 +55,7 @@ export class TodoService {
   }
 
   async deleteTodo(todoId: string): Promise<void> {
-    logger.debug('Deleting todo in TodoRepository', { todoId });
+    logger.info('Deleting todo in TodoRepository', { todoId });
     const todo = await this.todoRepository.deleteById(todoId);
 
     if (!todo) {
@@ -64,7 +65,7 @@ export class TodoService {
   }
 
   async updateTodoStatus(todoId: string) {
-    logger.debug('Changing todo completion status', { todoId });
+    logger.info('Changing todo completion status', { todoId });
     const currentTodo = await this.todoRepository.findById(todoId);
 
     if (!currentTodo) {

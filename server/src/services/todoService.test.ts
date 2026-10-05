@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { TodoDocument } from '../models/Todo.js';
 import type { TodoRepository } from '../repositories/todoRepository.js';
 import { NotFoundException } from '../exceptions/ApiException.js';
-import { TodoStatus } from '@/types/index.js';
+import { TodoSort, TodoStatus } from '@/types/index.js';
 import { TodoService } from './todoService.js';
 
 describe('TodoService.createTodo', () => {
@@ -45,7 +45,7 @@ describe('TodoService.createTodo', () => {
       findTodos: vi.fn().mockResolvedValue({ items, totalItems: 21 }),
     } as unknown as TodoRepository;
     const service = new TodoService(repository);
-    const query = { page: 2, limit: 10, status: TodoStatus.ALL };
+    const query = { page: 2, limit: 10, status: TodoStatus.ALL, sort: TodoSort.NEWEST };
 
     await expect(service.listTodos(query)).resolves.toEqual({
       items,
@@ -69,6 +69,7 @@ describe('TodoService.createTodo', () => {
       limit: 10,
       search: 'missing',
       status: TodoStatus.PENDING,
+      sort: TodoSort.NEWEST,
     };
 
     await expect(service.listTodos(query)).resolves.toEqual({

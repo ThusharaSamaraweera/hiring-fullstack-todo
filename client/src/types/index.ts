@@ -1,4 +1,4 @@
-export { TodoStatus } from './api'
+export { TodoSort, TodoStatus } from './api'
 export type {
   ApiResponse,
   CreateTodoInput,

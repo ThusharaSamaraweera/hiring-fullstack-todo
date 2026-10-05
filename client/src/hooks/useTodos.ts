@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { createTodo, deleteTodo, fetchTodos, updateTodo, updateTodoStatus } from '@/api'
 import {
+  TodoSort,
   TodoStatus,
   type CreateTodoInput,
   type PaginatedTodos,
@@ -16,6 +17,7 @@ const initialTodoQuery: TodoQuery = {
   limit: 10,
   search: '',
   status: TodoStatus.ALL,
+  sort: TodoSort.NEWEST,
 }
 
 export function useTodos() {

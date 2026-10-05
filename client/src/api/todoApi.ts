@@ -35,6 +35,7 @@ export function fetchTodos(query: TodoQuery): Promise<PaginatedTodos> {
       page: query.page,
       limit: query.limit,
       status: query.status,
+      sort: query.sort,
       ...(query.search ? { search: query.search } : {}),
     },
   })

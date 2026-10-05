@@ -1,5 +1,5 @@
 import { TodoModel, type TodoDocument } from '@/models/index.js';
-import { TodoStatus, type TodoUpdateFields } from '@/types/index.js';
+import { TodoSort, TodoStatus, type TodoUpdateFields } from '@/types/index.js';
 import type { CreateTodoInput, ListTodosInput } from '@/validators/index.js';
 import { escapeRegex } from '@/utils/regex.js';
 import { logger } from '../utils/logger.js';
@@ -21,9 +21,15 @@ export class TodoRepository {
       ];
     }
 
+    const sort = todoQuery.sort === TodoSort.OLDEST
+      ? { createdAt: 1 as const, _id: 1 as const }
+      : todoQuery.sort === TodoSort.RECENTLY_MODIFIED
+        ? { updatedAt: -1 as const, _id: -1 as const }
+        : { createdAt: -1 as const, _id: -1 as const };
+
     const [items, totalItems] = await Promise.all([
       TodoModel.find(filter)
-        .sort({ createdAt: -1, _id: -1 })
+        .sort(sort)
         .skip((todoQuery.page - 1) * todoQuery.limit)
         .limit(todoQuery.limit)
         .lean<TodoDocument[]>()

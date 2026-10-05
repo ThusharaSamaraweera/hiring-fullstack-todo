@@ -4,6 +4,12 @@ export enum TodoStatus {
   COMPLETED = 'completed',
 }
 
+export enum TodoSort {
+  NEWEST = 'newest',
+  OLDEST = 'oldest',
+  RECENTLY_MODIFIED = 'recentlyModified',
+}
+
 export enum TodoOperation {
   UPDATE_STATUS = 'updateStatus',
   DELETE = 'delete',

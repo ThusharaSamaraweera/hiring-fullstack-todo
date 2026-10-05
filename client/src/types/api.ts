@@ -45,9 +45,18 @@ export const TodoStatus = {
 
 export type TodoStatus = (typeof TodoStatus)[keyof typeof TodoStatus]
 
+export const TodoSort = {
+  NEWEST: 'newest',
+  OLDEST: 'oldest',
+  RECENTLY_MODIFIED: 'recentlyModified',
+} as const
+
+export type TodoSort = (typeof TodoSort)[keyof typeof TodoSort]
+
 export interface TodoQuery {
   page: number
   limit: number
   search: string
   status: TodoStatus
+  sort: TodoSort
 }

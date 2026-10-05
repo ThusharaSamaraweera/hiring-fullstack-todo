@@ -5,7 +5,7 @@ import {
   todoIdSchema,
   updateTodoSchema,
 } from './todoValidators.js';
-import { TodoStatus } from '@/types/index.js';
+import { TodoSort, TodoStatus } from '@/types/index.js';
 
 describe('createTodoSchema', () => {
   it('accepts a valid todo', () => {
@@ -68,6 +68,7 @@ describe('listTodosSchema', () => {
       page: 1,
       limit: 10,
       status: TodoStatus.ALL,
+      sort: TodoSort.NEWEST,
     });
   });
 
@@ -84,6 +85,7 @@ describe('listTodosSchema', () => {
       limit: 20,
       search: 'typescript',
       status: TodoStatus.COMPLETED,
+      sort: TodoSort.NEWEST,
     });
   });
 
@@ -92,6 +94,7 @@ describe('listTodosSchema', () => {
     [{ limit: '0' }, 'limit below 1'],
     [{ limit: '101' }, 'limit above 100'],
     [{ status: 'invalid' }, 'invalid status'],
+    [{ sort: 'invalid' }, 'invalid sort'],
   ])('rejects %s', (input, _description) => {
     expect(listTodosSchema.safeParse(input).success).toBe(false);
   });

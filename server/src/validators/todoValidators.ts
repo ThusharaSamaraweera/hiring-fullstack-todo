@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TodoStatus } from '@/types/index.js';
+import { TodoSort, TodoStatus } from '@/types/index.js';
 
 const title = z
   .string({
@@ -38,6 +38,7 @@ export const listTodosSchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(10),
   search: z.string().trim().max(100, 'Search must be 100 characters or less').optional(),
   status: z.enum([TodoStatus.ALL, TodoStatus.PENDING, TodoStatus.COMPLETED]).default(TodoStatus.ALL),
+  sort: z.enum([TodoSort.NEWEST, TodoSort.OLDEST, TodoSort.RECENTLY_MODIFIED]).default(TodoSort.NEWEST),
 }).strict();
 
 export type CreateTodoInput = z.infer<typeof createTodoSchema>;
