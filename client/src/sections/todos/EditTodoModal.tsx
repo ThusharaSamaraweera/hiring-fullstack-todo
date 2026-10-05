@@ -103,7 +103,7 @@ export function EditTodoModal({
           )}
         </div>
 
-        <div className="flex justify-end gap-2 border-t border-stone-100 pt-4">
+        <div className="flex justify-end gap-4 border-t border-stone-100 pt-4">
           <Button type="button" variant="ghost" onClick={onClose}>
             Cancel
           </Button>

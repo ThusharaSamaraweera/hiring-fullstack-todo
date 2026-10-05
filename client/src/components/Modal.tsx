@@ -1,4 +1,5 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useId, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { Button } from './Button'
 
 interface ModalProps {
@@ -9,22 +10,30 @@ interface ModalProps {
 }
 
 export function Modal({ open, title, children, onClose }: ModalProps) {
+  const titleId = useId()
+
   useEffect(() => {
     if (!open) return undefined
+
+    const previousBodyOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
     }
 
     document.addEventListener('keydown', handleKeyDown)
-    return () => document.removeEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = previousBodyOverflow
+      document.removeEventListener('keydown', handleKeyDown)
+    }
   }, [open, onClose])
 
   if (!open) return null
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 grid place-items-center bg-stone-950/40 p-4"
+      className="fixed inset-0 z-50 grid place-items-center bg-transparent p-4 backdrop-blur-sm"
       role="presentation"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose()
@@ -34,9 +43,10 @@ export function Modal({ open, title, children, onClose }: ModalProps) {
         className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl"
         role="dialog"
         aria-modal="true"
+        aria-labelledby={titleId}
       >
         <div className="mb-5 flex items-start justify-between">
-          <h2 id="modal-title" className="text-lg font-semibold text-stone-900">
+          <h2 id={titleId} className="text-lg font-semibold text-stone-900">
             {title}
           </h2>
           <Button
@@ -60,6 +70,7 @@ export function Modal({ open, title, children, onClose }: ModalProps) {
         </div>
         {children}
       </section>
-    </div>
+    </div>,
+    document.body,
   )
 }

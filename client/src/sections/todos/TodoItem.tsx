@@ -28,7 +28,7 @@ export function TodoItem({
   const [isDeleteConfirming, setIsDeleteConfirming] = useState(false)
 
   return (
-    <article className="border-b border-stone-200 py-5 last:border-0">
+    <article className="border-b border-stone-200 px-2 py-5 transition duration-150 hover:-translate-y-0.5 hover:rounded-lg hover:bg-stone-50/70 hover:shadow-sm last:border-0">
       <div className="flex items-start gap-3">
         <Button
           type="button"
@@ -126,7 +126,7 @@ export function TodoItem({
           {todo.description || 'No description added.'}
         </p>
         <p className="mt-5 text-xs text-stone-400">Created {formatCreatedAt(todo.createdAt)}</p>
-        <div className="mt-8 flex justify-end gap-2 border-t border-stone-100 pt-4">
+        <div className="mt-8 flex justify-end gap-4 border-t border-stone-100 pt-4">
           <Button type="button" variant="danger" onClick={() => {
             setIsViewing(false)
             setIsDeleteConfirming(true)
@@ -164,7 +164,7 @@ export function TodoItem({
         <p className="text-sm leading-6 text-stone-600">
           This will permanently remove “{todo.title}”. This action cannot be undone.
         </p>
-        <div className="mt-8 flex justify-end gap-2 border-t border-stone-100 pt-4">
+        <div className="mt-8 flex justify-end gap-4 border-t border-stone-100 pt-4">
           <Button type="button" variant="ghost" onClick={() => setIsDeleteConfirming(false)}>
             Cancel
           </Button>
